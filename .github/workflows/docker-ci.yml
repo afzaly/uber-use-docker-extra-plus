@@ -1,0 +1,27 @@
+name: Docker CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  validate-and-build:
+    runs-on: ubuntu-latest
+
+    env:
+      POSTGRES_DB: georide
+      POSTGRES_USER: georide
+      POSTGRES_PASSWORD: ci-test-password
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate Docker Compose configuration
+        run: docker compose config --quiet
+
+      - name: Build application images
+        run: docker compose build api location matcher simulator-alpha
